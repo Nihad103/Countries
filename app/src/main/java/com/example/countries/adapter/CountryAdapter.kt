@@ -23,7 +23,6 @@ class CountryAdapter(val countryList: ArrayList<Country>): RecyclerView.Adapter<
             val action = FirstFragmentDirections.actionFirstFragmentToDetailFragment(uuid)
             Navigation.findNavController(view).navigate(action)
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RowHolder {
