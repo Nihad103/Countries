@@ -15,9 +15,16 @@ import com.example.countries.util.downloadImageFromUrl
 import com.example.countries.util.progressDrawable
 import com.example.countries.view.FirstFragmentDirections
 
-class CountryAdapter(val countryList: ArrayList<Country>): RecyclerView.Adapter<CountryAdapter.RowHolder>(), CountryClickListener {
+class CountryAdapter(val countryList: ArrayList<Country>): RecyclerView.Adapter<CountryAdapter.RowHolder>() {
 
-    class RowHolder(val view: ItemViewBinding): RecyclerView.ViewHolder(view.root)
+    class RowHolder(var binding : ItemViewBinding) : RecyclerView.ViewHolder(binding.root), CountryClickListener {
+        override fun onCountryClicked(view: View) {
+            val uuid = binding.countryUuid.text.toString().toInt()
+            val action = FirstFragmentDirections.actionFirstFragmentToDetailFragment(uuid)
+            Navigation.findNavController(view).navigate(action)
+        }
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RowHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -31,8 +38,9 @@ class CountryAdapter(val countryList: ArrayList<Country>): RecyclerView.Adapter<
     }
 
     override fun onBindViewHolder(holder: RowHolder, position: Int) {
-        holder.view.root.tag = holder.view
-        holder.view.country = countryList[position]
+
+        holder.binding.country = countryList[position]
+        holder.binding.listener = holder
 
         /*
 
@@ -59,9 +67,4 @@ class CountryAdapter(val countryList: ArrayList<Country>): RecyclerView.Adapter<
         notifyDataSetChanged()
     }
 
-    override fun onCountryClicked(view: View) {
-        val uuid = ItemViewBinding.bind(view).countryUuid.text.toString().toInt()
-        val action = FirstFragmentDirections.actionFirstFragmentToDetailFragment(uuid)
-        Navigation.findNavController(view).navigate(action)
-    }
 }

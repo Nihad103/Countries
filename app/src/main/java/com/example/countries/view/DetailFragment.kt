@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.example.countries.R
+import com.example.countries.databinding.FragmentDetailBinding
 import com.example.countries.model.Country
 import com.example.countries.util.downloadImageFromUrl
 import com.example.countries.util.progressDrawable
@@ -21,18 +23,17 @@ class DetailFragment : Fragment() {
 
     lateinit var detailViewModel: DetailViewModel
     private var detailUuid = 0
+    private lateinit var dataBinding: FragmentDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detail, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?): View {
+        dataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
+        return dataBinding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,6 +53,9 @@ class DetailFragment : Fragment() {
 
     private fun observeLiveData() {
         detailViewModel.countries.observe(viewLifecycleOwner, Observer { country ->
+            dataBinding.detailCountry = country
+
+            /*
             val countryName = view?.findViewById<TextView>(R.id.countryName)
             val countryRegion = view?.findViewById<TextView>(R.id.countryRegion)
             val countryCapital = view?.findViewById<TextView>(R.id.countryCapital)
@@ -65,17 +69,11 @@ class DetailFragment : Fragment() {
                 countryCapital?.text = country.countryCapital
                 countryCurrency?.text = country.countryCurrency
                 countryLanguage?.text = country.countryLanguage
-
-                /*
-                Dogru olan budu
                 context?.let {
                     countryImage?.downloadImageFromUrl(country.imageUrl, progressDrawable(context!!))
                 }
-                */
-
-                // Bu men yazandi
-                countryImage?.downloadImageFromUrl(it.imageUrl, progressDrawable(context!!))
             }
+             */
         })
     }
 }
